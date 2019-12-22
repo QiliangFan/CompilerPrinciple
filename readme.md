@@ -19,7 +19,7 @@
 2. flex
 3. bison
 4. gcc or clang
-5. if your computer's system is linux/unix/mac ?
+5. whether your computer's system is linux/unix/mac or not?
 ~~~
 
 
