@@ -1,0 +1,16 @@
+0:	FUNCTION	_	_	main
+1:	=	#2	_	temphh2
+3:	=	#3	_	temphh3
+4:	*	temphh2	temphh3	temphh4
+5:	ARG	temphh4	_	_
+6:	CALL	PRINT	_	_
+7:	=	#333	_	temphh5
+9:	=	#1	_	temphh7
+11:	=	#3	_	temphh8
+12:	+	temphh7	temphh8	temphh9
+14:	=	#1	_	temphh10
+15:	+	temphh9	temphh10	temphh11
+16:	ARG	temphh11	_	_
+17:	CALL	PRINT	_	_
+18:	=	#0	_	temphh12
+19:	RETURN	temphh12	_	_

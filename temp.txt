@@ -1,0 +1,160 @@
+
+
+%union{
+    char* value;         //for NUM value
+    char* str;              //for STR value
+    struct{
+        char *name;
+        char* type;
+        char *value;
+        int address;
+    } id;                         // for ID struct
+
+    char* type;          //for T type information
+
+}
+
+%token <id> ID
+%token <value> NUM
+%token <str> STR
+%token <type> T
+
+%type <id> e
+
+
+%token TRUE FALSE
+
+%token PTR INC DEC LEFT_OP RIGHT_OP LE GE EQ NE
+%token AND OR
+%token STRUCT
+%token CASE DEFAULT IF ELSE SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN
+%token PRINT INPUT
+
+%start all
+
+%nonassoc lt_else
+%nonassoc ELSE
+
+
+%right '='
+%left OR
+%left AND
+%left EQ NE
+%left '>' GE '<' LE
+%left '+' '-'
+%left '*' '/' '%'
+%right '!' INC DEC
+%left '&' '^' 
+%nonassoc UMINUS
+
+
+%%
+all
+    : p_list   
+    | error
+    ;
+
+p_list
+    : p p_list  
+    | s p_list 
+    | s 
+    | p
+    ;
+
+p
+    :T ID '(' dec_param_list ')' '{' s_list '}'  
+    | T ID  '(' ')' '{' s_list  '}'                         
+    ;
+
+s_list
+    :  s s_list                       
+    | s                                                                 
+
+s
+    : IF '(' e ')' '{' s_list '}'  %prec lt_else  
+    | IF '(' e ')' '{' s_list '}' ELSE '{' s_list '}'    
+    | WHILE '(' e ')' '{' s_list '}'    
+    | DO '{' s_list '}' WHILE '(' e ')' ';'  
+    | FOR '(' e ';' e ';' e ')' '{' s_list '}'        
+    | T Did_list ';'                          
+    | T Aid_list ';'                              
+    | PRINT '(' e ')' ';'                             
+    | e ';'                         
+    | RETURN e ';'                    
+    ;
+
+dec_param_list
+    : dec_param ',' dec_param_list           
+    | dec_param                 
+    ;
+
+dec_param
+    : T ID                           
+    ;
+
+param_list
+    : e ',' param_list                                      
+    | e                                
+    ;
+
+Aid_list
+    : Aid ',' Aid_list                                 
+    | Aid                                       
+    ;
+
+Aid
+    : ID '[' NUM ']'                               
+    ;
+
+Did_list
+    : Did ',' Did_list                
+    | Did                           
+    ;
+
+Did
+    : '*' Did                
+    | ID                          
+    | ID '=' e                         
+    ;
+e
+    : e OR e               
+    | e AND e                     
+    | '!' e                          
+    | ID '(' param_list ')'  
+    | ID '('  ')'       
+    | '(' e ')'          
+    | e '<' e      
+    | e '>' e              
+    | e '>' e         
+    | e LE e     
+    | e GE e         
+    | e EQ e        
+    | e NE e     
+    | e '+' e       
+    | e '-' e       
+    | e '*' e        
+    | e '/' e         
+    | e '%' e         
+    | e '^' e                
+    | TRUE       
+    | FALSE         
+    | '-' e %prec UMINUS 
+    | e '=' e           
+    | INPUT '(' ')'       
+    | NUM             
+    | STR             
+    | ID           
+    | e INC        
+    | e DEC          
+    | INC e          
+    | DEC e      
+    | ID '[' e ']'     
+    | '*' e    %prec UMINUS   
+    | '&' e           
+    ;
+
+wrong
+    : T Did_list ':'              
+    | e ':'            
+    | PRINT '('  ')'   
+    ;

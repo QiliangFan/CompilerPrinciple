@@ -1,0 +1,1 @@
+put -r . /remote/compiler/
